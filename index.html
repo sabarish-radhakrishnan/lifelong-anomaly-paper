@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f6f9fa">
+  <meta name="description" content="Research preprint by Sabarish Radhakrishnan and Nathalie Japkowicz on latent cluster separation, lifelong anomaly detection, and scoring robustness.">
+  <meta property="og:title" content="Latent Cluster Separation as a Regularizer for Lifelong Anomaly Detection">
+  <meta property="og:description" content="Author preprint submitted to IEEE BigData 2026. Read the manuscript, method, and key findings.">
+  <meta property="og:type" content="article">
+  <title>Latent Cluster Separation | Research by Sabarish Radhakrishnan &amp; Nathalie Japkowicz</title>
+  <style>
+    :root { --ink:#142e3c; --muted:#536978; --line:#dce7eb; --cream:#f6f9fa; --white:#fff; --sea:#087b89; --dark:#0c3547; --orange:#d59853; --soft:#e9f4f4; }
+    * { box-sizing:border-box }
+    html { scroll-behavior:smooth }
+    body { margin:0; background:var(--cream); color:var(--ink);font:16px/1.68 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif; }
+    a { color:inherit }
+    a:focus-visible { outline:3px solid var(--sea);outline-offset:4px;border-radius:4px }
+    .wrap { width:min(1130px,calc(100% - 48px)); margin:auto }
+    .overline { color:var(--sea);font-size:.73rem;letter-spacing:.17em;font-weight:800;text-transform:uppercase }
+    nav { display:flex;align-items:center;justify-content:space-between;min-height:77px;gap:20px }
+    .brand { font-size:.84rem;text-decoration:none;font-weight:800;letter-spacing:.06em;display:flex;align-items:center;gap:10px }
+    .mark { background:var(--dark);color:white;display:grid;place-items:center;width:37px;height:37px;border-radius:9px;font:700 12px Georgia,serif;letter-spacing:.02em }
+    .navlinks { display:flex;gap:27px;align-items:center }
+    .navlinks a { color:#425b67;text-decoration:none;font-weight:650;font-size:.84rem }
+    .navlinks a:hover { color:var(--sea) }
+    .policy { background:#e5f0f2;border-top:1px solid #d9e9ec;border-bottom:1px solid #d9e9ec;color:#365867;padding:12px 0;font-size:.78rem;line-height:1.5 }
+    .policy strong { font-weight:800;color:#154151 }
+    .policy p { margin:0 }
+    .hero { position:relative;padding:83px 0 92px;border-bottom:1px solid var(--line) }
+    .hero-grid {display:grid;grid-template-columns:minmax(0,1.2fr) minmax(350px,.8fr);gap:60px;align-items:center}
+    h1,h2,h3,blockquote { font-family:Georgia, 'Times New Roman',serif;letter-spacing:-.035em }
+    h1 {font-size:clamp(2.8rem,4.8vw,4.65rem);font-weight:500;line-height:1.115;margin:19px 0 24px;max-width:810px}
+    h1 em {font-style:normal;color:var(--sea)}
+    .subhead {font-size:1.1rem;max-width:640px;color:var(--muted);line-height:1.73;margin:0 0 26px}
+    .authors {display:flex;flex-wrap:wrap;gap:18px 30px;margin:27px 0 36px;padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .author {font-size:.91rem;font-weight:800;line-height:1.35}
+    .affil {display:block;color:var(--muted);font-size:.78rem;font-weight:500;margin-top:4px}
+    .actions {display:flex;flex-wrap:wrap;gap:12px}
+    .btn {display:inline-flex;align-items:center;gap:11px;justify-content:center;border-radius:8px;border:1px solid var(--dark);padding:14px 19px;text-decoration:none;font-size:.9rem;font-weight:800;transition:transform .15s,box-shadow .15s}
+    .btn:hover {transform:translateY(-2px);box-shadow:0 5px 15px #0a425115}
+    .btn.primary {background:var(--dark);color:white}
+    .btn.secondary {background:transparent;color:var(--dark);border-color:#c7d8dd}
+    .statusline {margin-top:22px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-size:.78rem;color:var(--muted)}
+    .status {display:inline-flex;align-items:center;gap:7px;border:1px solid #b7d4d6;background:#edf7f7;color:#12666d;padding:4px 12px;border-radius:999px;font-size:.73rem;font-weight:800;letter-spacing:.02em}
+    .status::before {content:"";width:6px;height:6px;border-radius:50%;background:#23a396}
+    .viz {background:var(--dark);color:white;border-radius:18px;padding:28px;box-shadow:0 26px 70px #1c4d6222;position:relative;overflow:hidden}
+    .viz::after {content:"";position:absolute;bottom:-115px;right:-100px;width:270px;height:270px;background:radial-gradient(circle,#1c758a50,transparent 67%);pointer-events:none}
+    .viz-head {display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:23px}
+    .viz-label {color:#9cccd2;font-size:.68rem;letter-spacing:.14em;font-weight:800;text-transform:uppercase}
+    .viz-badge {color:#aacfd0;font-size:.7rem;border:1px solid #497585;border-radius:999px;padding:3px 9px}
+    .visual-flow {padding:13px 3px 0}
+    .node {position:relative;border:1px solid #5b8996;border-radius:10px;padding:13px 16px;background:#17495b;text-align:center;font-weight:750;font-size:.84rem;z-index:1}
+    .node.light {background:#176779;border-color:#4da2a9}
+    .node small {display:block;font-size:.67rem;color:#bfd7dc;font-weight:400;margin-top:3px}
+    .connector {display:block;margin:5px auto;background:#5b8996;width:1px;height:23px;position:relative}
+    .connector::after {content:"";position:absolute;bottom:0;left:-3px;width:7px;height:7px;border-right:1px solid #82b9c2;border-bottom:1px solid #82b9c2;transform:rotate(45deg)}
+    .branch {display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;position:relative}
+    .branch::before {content:"";height:1px;background:#638c99;position:absolute;left:25%;right:25%;top:-10px}
+    .branch::after {content:"";height:10px;width:1px;background:#638c99;position:absolute;left:50%;top:-20px}
+    .branch .node {font-size:.78rem}
+    .viz-note {font-size:.7rem;color:#b3cbd1;margin:22px 0 0;line-height:1.6}
+    main section {padding:89px 0;border-bottom:1px solid var(--line)}
+    .section-grid {display:grid;grid-template-columns:270px minmax(0,1fr);gap:65px}
+    h2 {font-size:clamp(2rem,3vw,3rem);line-height:1.2;font-weight:500;margin:10px 0 18px}
+    .smalltitle {font-size:.85rem;color:var(--sea);letter-spacing:.13em;text-transform:uppercase;font-weight:800}
+    .abstract {font-size:1.08rem;line-height:1.95;color:#385463;margin:0}
+    .takeaway {margin-top:28px;padding:22px 25px;border-left:3px solid var(--sea);background:#edf5f5;color:#2c5361;font-size:.95rem}
+    .cards {display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:35px}
+    .card {background:white;border:1px solid var(--line);border-radius:13px;padding:27px;min-height:235px}
+    .card .num {font:400 2rem Georgia,serif;color:#b2cbcf}
+    .card h3 {font-size:1.43rem;margin:15px 0 10px;font-weight:500}
+    .card p {margin:0;color:var(--muted);font-size:.9rem}
+    .muted {color:var(--muted)}
+    .method-intro {max-width:750px}
+    .metrics {display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:35px}
+    .metric {padding:26px;background:#eaf3f4;border-radius:12px}
+    .metric strong {display:block;font:400 2rem Georgia,serif;color:var(--dark)}
+    .metric span {font-size:.86rem;color:var(--muted)}
+    .findings {display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;margin-top:37px}
+    .finding {border-top:2px solid #9bbec6;padding-top:21px}
+    .finding .overline {font-size:.67rem}
+    .finding h3 {font-size:1.5rem;font-weight:500;margin:12px 0}
+    .finding p {font-size:.93rem;color:var(--muted)}
+    .pubbox {background:white;border:1px solid var(--line);border-radius:14px;padding:33px;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
+    .pubbox h3 {font-size:1.7rem;font-weight:500;margin:13px 0 13px}
+    .pubbox p {color:var(--muted);font-size:.93rem;margin:0}
+    .pub-detail {padding-left:30px;border-left:1px solid var(--line);font-size:.85rem}
+    .pub-detail dt {color:var(--muted);font-size:.77rem;margin-top:10px}
+    .pub-detail dd {margin:0;font-weight:750}
+    footer {padding:45px 0 70px;font-size:.79rem;color:var(--muted)}
+    .footer-grid {display:flex;justify-content:space-between;flex-wrap:wrap;gap:25px}
+    footer a {text-underline-offset:3px}
+
+    /* Empirical evidence is reproduced directly from the submitted manuscript. */
+    .figure-panel { margin:36px 0 0;background:white;border:1px solid var(--line);border-radius:14px;padding:28px; }
+    .figure-panel img { width:100%;height:auto;display:block; }
+    .figure-panel figcaption { color:var(--muted);font-size:.86rem;line-height:1.7;margin-top:20px;padding-top:17px;border-top:1px solid var(--line); }
+    .figure-panel figcaption strong {color:var(--ink)}
+    .pubbox dd a {word-break:break-word}
+    @media(max-width:920px) {.hero-grid{grid-template-columns:1fr;gap:35px}.viz{max-width:560px}.section-grid{grid-template-columns:1fr;gap:10px}.cards,.findings{grid-template-columns:1fr 1fr}}
+    @media(max-width:620px) {.wrap{width:min(100% - 34px,1130px)}nav{min-height:72px;flex-wrap:wrap;padding:13px 0;gap:9px}.navlinks{flex-basis:100%;justify-content:space-between;gap:9px;flex-wrap:wrap}.navlinks a{font-size:.76rem}.hero{padding:51px 0 65px}h1{font-size:2.65rem}main section{padding:58px 0}.cards,.findings,.metrics,.pubbox{grid-template-columns:1fr}.card{min-height:auto}.pub-detail{border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:15px}.viz{padding:21px}.abstract{font-size:1rem}.figure-panel{padding:13px}.figure-panel figcaption{font-size:.81rem}}
+    @media(prefers-reduced-motion:reduce) {html{scroll-behavior:auto}.btn{transition:none}}
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <nav aria-label="Main navigation">
+      <a class="brand" href="#top"><span class="mark" aria-hidden="true">SR</span><span>RESEARCH / 2026</span></a>
+      <div class="navlinks"><a href="#abstract">Abstract</a><a href="#method">Method</a><a href="#findings">Findings</a><a href="#publication">Publication</a></div>
+    </nav>
+  </header>
+  <div class="policy"><div class="wrap"><p><strong>IEEE submission notice:</strong> This work has been submitted to the IEEE for possible publication. Copyright may be transferred without notice, after which this version may no longer be accessible.</p></div></div>
+  <div id="top" class="hero"><div class="wrap hero-grid">
+    <div>
+      <div class="overline">Continual learning &nbsp; / &nbsp; anomaly detection</div>
+      <h1>Latent Cluster Separation as a <em>Regularizer</em> for Lifelong Anomaly Detection</h1>
+      <p class="subhead">Disentangling representation shaping from anomaly scoring in variational-autoencoder-based continual anomaly detection.</p>
+      <div class="authors">
+        <div class="author">Sabarish Radhakrishnan <span class="affil">John Champe High School / Academies of Loudoun · First author</span></div>
+        <div class="author">Nathalie Japkowicz <span class="affil">Department of Computer Science · American University</span></div>
+      </div>
+      <div class="actions"><a class="btn primary" href="manuscript.pdf" target="_blank" rel="noopener" aria-label="Open the full manuscript PDF">Read the manuscript <span aria-hidden="true">↗</span></a><a class="btn secondary" href="#findings">Explore findings <span aria-hidden="true">↓</span></a></div>
+      <div class="statusline"><span class="status">Submitted · Under review</span><span>IEEE BigData 2026 main track · Author preprint</span></div>
+    </div>
+    <aside class="viz" aria-label="Schematic of the research comparison; illustration, not empirical results">
+      <div class="viz-head"><span class="viz-label">Research framework</span><span class="viz-badge">Conceptual schematic</span></div>
+      <div class="visual-flow"><div class="node">Streaming anomaly-detection tasks<small>Sequential learning setting</small></div><span class="connector" aria-hidden="true"></span><div class="node light">VAE latent representation<small>With or without centroid regularization</small></div><span class="connector" aria-hidden="true"></span><div class="node">Latent separation objective<small>Controlled training-time intervention</small></div><div class="branch"><div class="node">Reconstruction scoring<small>LatentSep-Recon</small></div><div class="node">Centroid-distance scoring<small>LatentSep-Dist</small></div></div></div>
+      <p class="viz-note">Simplified study design. Baseline uses reconstruction scoring without latent separation; two additional configurations isolate the scoring-rule choice.</p>
+    </aside>
+  </div></div>
+  <main>
+    <section id="abstract"><div class="wrap section-grid"><div><div class="smalltitle">01 / Overview</div><h2>Abstract</h2></div><div><p class="abstract">Lifelong (continual) anomaly detection systems must learn a sequence of tasks without forgetting how to recognize anomaly types seen earlier – a property known as backward transfer. A common way to try to improve backward transfer is to reshape a model’s internal representation around learnable concept centroids, typically coupled with a new way of scoring anomalies based on distance to those centroids. Because these two design choices are usually introduced together, it is unclear which one is actually responsible for any performance gain. In this paper, we unbundle the two mechanisms within a VAE-based lifelong anomaly detector and study them separately. We find that used purely as a training-time regularizer – while leaving anomaly scoring unchanged – latent cluster separation can improve detection quality and backward transfer, though whether it outperforms the alternative scoring approach depends on the dataset’s underlying representation. Switching to distance-based scoring is instead where most of the instability commonly associated with this class of method actually originates; we identify and explain the underlying mechanism. This benefit depends on the dataset’s underlying representation, and we report this as practical guidance for choosing between the two design choices, rather than as a list of caveats.</p><div class="takeaway"><strong>Core question.</strong> When a centroid-based method improves continual anomaly detection, is the benefit caused by the training-time representation objective or by the anomaly-scoring rule?</div></div></div></section>
+    <section id="method"><div class="wrap"><div class="smalltitle">02 / Study design</div><h2>Separate the components.<br>Measure the difference.</h2><p class="muted method-intro">The study tests two normally bundled design choices through controlled comparisons within a VAE-based lifelong anomaly detector. The goal is to isolate the contribution of latent cluster separation from the effect of changing the scoring mechanism.</p><div class="cards">
+      <div class="card"><span class="num">01</span><h3>Baseline</h3><p>Original VAE-based configuration, without the added latent cluster-separation regularizer; reconstruction-based anomaly scoring.</p></div>
+      <div class="card"><span class="num">02</span><h3>LatentSep-Recon</h3><p>Introduces the latent cluster-separation objective during training while retaining reconstruction-error anomaly scoring.</p></div>
+      <div class="card"><span class="num">03</span><h3>LatentSep-Dist</h3><p>Uses the same type of separation objective but switches anomaly scoring to distance from the nearest latent centroid.</p></div>
+    </div><div class="metrics"><div class="metric"><strong>3</strong><span>Security datasets (ADFA-LD, NSL-KDD, UNSW-NB15)</span></div><div class="metric"><strong>3</strong><span>Model configurations compared</span></div><div class="metric"><strong>3</strong><span>Random seeds used in experiments</span></div></div></div></section>
+    <section id="findings"><div class="wrap"><div class="smalltitle">03 / Evidence</div><h2>Key findings</h2><p class="muted method-intro">The results do not establish one universally superior scoring method: the preferred approach changes across datasets, and latent-space behavior helps explain why.</p><div class="findings">
+      <article class="finding"><div class="overline">ADFA-LD</div><h3>Regularization can help without changing the scorer.</h3><p>LatentSep-Recon improves detection quality and backward transfer relative to Baseline in this benchmark, with lower seed-to-seed variance than the distance-scoring alternative.</p></article>
+      <article class="finding"><div class="overline">NSL-KDD</div><h3>The scoring choice affects reliability.</h3><p>Reconstruction-based scoring performs better than centroid-distance scoring in the controlled comparison, although neither centroid-based configuration exceeds Baseline overall on this dataset.</p></article>
+      <article class="finding"><div class="overline">UNSW-NB15</div><h3>The dataset can reverse the result.</h3><p>Distance-based scoring performs better in the study's comparisons on this dataset, demonstrating why the choice cannot be generalized uniformly across anomaly-detection tasks.</p></article>
+    </div><div class="takeaway"><strong>Mechanism insight:</strong> A latent-space collapse diagnostic helps explain why distance-only scoring may become unstable, while reconstruction scoring can retain signal by directly comparing model output against the input.</div><figure class="figure-panel"><img src="latent-space-diagnostic.png" alt="Figure 1: Two-row PCA visualization of latent representations for ADFA-LD, NSL-KDD, and UNSW-NB15. Top row: Baseline. Bottom row: LatentSep-Dist (c), showing collapsed point distributions." loading="lazy" width="2088" height="1342"><figcaption><strong>Figure 1 — Latent-space collapse diagnostic.</strong> PCA projections for three intrusion-detection datasets. The top row shows the baseline model; the bottom row shows LatentSep-Dist (the centroid-distance-scoring configuration). This figure is reproduced from the accompanying author preprint (see the <a href="manuscript.pdf" target="_blank" rel="noopener">full paper</a> for the original caption, discussion, and experimental conditions). This visualization illustrates latent collapse under the centroid-distance configuration; the quantitative evaluation and limitations are in the PDF.</figcaption></figure></div></section>
+    <section id="publication"><div class="wrap"><div class="smalltitle">04 / Research record</div><h2>Publication status</h2><div class="pubbox"><div><span class="status">Submitted · Under review</span><h3>2026 IEEE International Conference on Big Data (IEEE BigData 2026)</h3><p>Submitted to the conference’s main research-paper track in August 2026. This page is an independent author-hosted preprint, not an IEEE or arXiv publication. Official arXiv and IEEE publication links will be added if they become available.</p></div><dl class="pub-detail"><dt>Submission</dt><dd>August 21, 2026</dd><dt>Conference</dt><dd><a href="https://bigdataieee.org/BigData2026/" target="_blank" rel="noopener noreferrer">Official IEEE BigData 2026 website ↗</a></dd><dt>Manuscript</dt><dd><a href="manuscript.pdf" target="_blank" rel="noopener">Full paper (PDF) ↗</a></dd><dt>Current classification</dt><dd>Author preprint</dd><dt>Peer-reviewed acceptance</dt><dd>Not yet confirmed</dd></dl></div></div></section>
+  </main>
+  <footer><div class="wrap footer-grid"><div>Sabarish Radhakrishnan &amp; Nathalie Japkowicz · Status checked October 19, 2026.<br>This independent author website is not an official IEEE or arXiv publication page.</div><div><a href="manuscript.pdf" target="_blank" rel="noopener">Download preprint</a> &nbsp;·&nbsp; <a href="https://conferences.ieeeauthorcenter.ieee.org/get-published/post-your-paper/" target="_blank" rel="noopener">IEEE author-posting policy</a></div></div></footer>
+</body>
+</html>
