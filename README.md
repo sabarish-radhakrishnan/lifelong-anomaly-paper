@@ -2,7 +2,7 @@
 
 **Authors:** Sabarish Radhakrishnan and Nathalie Japkowicz  
 **arXiv preprint:** [2611.03652](https://arxiv.org/abs/2611.03652) · [Read PDF](https://arxiv.org/pdf/2611.03652)  
-**Research status:** Public preprint on arXiv (cs.LG); also submitted to the IEEE BigData 2026 main research-paper track. Peer-reviewed acceptance has not been confirmed.
+**Research status:** Accepted November 6, 2026 to the 9th Workshop on Big Data for CyberSecurity (BigCyber 2026), held in conjunction with IEEE BigData 2026. The arXiv preprint is public; camera-ready proceedings publication is pending.
 
 ## Paper and research website
 
@@ -25,6 +25,6 @@ The homepage is a concise research summary. The full-manuscript page embeds the 
 
 ## Rights and publication status
 
-This GitHub Pages site is an author-hosted companion to the [public arXiv preprint](https://arxiv.org/abs/2611.03652), not an IEEE publication page. arXiv posting is not peer-reviewed acceptance. The author-hosted `manuscript.pdf` is retained for reference and may differ from the arXiv version. The manuscript includes the required submission notice: "This work has been submitted to the IEEE for possible publication. Copyright may be transferred without notice, after which this version may no longer be accessible."
+This GitHub Pages site is an author-hosted companion to the [public arXiv preprint](https://arxiv.org/abs/2611.03652), not an IEEE proceedings publication page. The paper has been accepted to the BigCyber 2026 workshop, but has not yet been published in IEEE conference proceedings. The author-hosted `manuscript.pdf` is retained for reference and may differ from the arXiv version. The manuscript includes the required submission notice: "This work has been submitted to the IEEE for possible publication. Copyright may be transferred without notice, after which this version may no longer be accessible."
 
-Any future accepted-manuscript or published-version updates must comply with IEEE's [posting policy](https://conferences.ieeeauthorcenter.ieee.org/get-published/post-your-paper/). The exact publicly posted version and figures should have all coauthors' approval. No publication, endorsement, peer review acceptance, or independent verification is implied by this site.
+Any future accepted-manuscript or published-version updates must comply with IEEE's [posting policy](https://conferences.ieeeauthorcenter.ieee.org/get-published/post-your-paper/). The exact publicly posted version and figures should have all coauthors' approval. Workshop acceptance is confirmed by the November 6, 2026 acceptance notice; IEEE proceedings publication and endorsement are not claimed.
